@@ -86,11 +86,12 @@ const MODEL_MAPPING = {
   'google-light': 'google/gemma-4-31b-it',
   'google-lightest': 'meta/muse-glimmer-30b', // was google/gemma-2b
   'google-lighter': 'poolside/laguna-xs-2.1', // was google/gemma-3-4b-it
-  'm3': 'minimaxai/minimax-m3'
+    'm3': 'minimaxai/minimax-m3',
+  'deepseek-ai/deepseek-v4.1-flash': 'deepseek-ai/deepseek-v4.1-flash'
 };
 
 // Used when an unrecognized alias is requested. Must point at a live model.
-const DEFAULT_MODEL = 'google/gemma-4-31b-it';
+const DEFAULT_MODEL = 'deepseek-ai/deepseek-v4.1-flash';
 
 // Ordered by observed reliability/speed — an early failing model delays every fallback behind it.
 const FALLBACK_MODELS = [
@@ -442,8 +443,8 @@ app.post('/v1/chat/completions', async (req, res) => {
       primaryModel = DEFAULT_MODEL;
     }
 
-    // De-dupe: avoids retrying the same model twice if it's also in FALLBACK_MODELS.
-    const modelChain = [...new Set([primaryModel, ...FALLBACK_MODELS])];
+   // Use only the requested model. Never switch to another backend.
+const modelChain = [primaryModel];
 
     // Forward all client fields except model (replaced per-attempt) and
     // reasoning_effort (translated per-model by getReasoningPayload).
