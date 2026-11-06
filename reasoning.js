@@ -177,8 +177,16 @@ function validReasoningEffort(model, effort) {
 // Resolves the client "off"/"on" override into an effective boolean. Shared
 // with callWithFallback() so both agree on whether reasoning is active.
 function resolveEffectiveThinking(enableThinking, clientReasoningEffort) {
-  if (clientReasoningEffort === 'off') return false;
-  if (clientReasoningEffort === 'on') return true;
+  const effort = typeof clientReasoningEffort === 'string'
+    ? clientReasoningEffort.trim().toLowerCase()
+    : clientReasoningEffort;
+
+  if (effort === 'off' || effort === 'none') return false;
+  if (effort === 'on') return true;
+
+  // Any selected reasoning level enables Thinking.
+  if (effort !== undefined && effort !== null && effort !== '') return true;
+
   return enableThinking;
 }
 
@@ -193,9 +201,14 @@ const NEMOTRON_LIGHTNING_BUDGET_MAP = { low: 2048, medium: 8192, high: 16384, ma
 function getReasoningPayload(model, enableThinking, clientReasoningEffort, hasTools) {
   enableThinking = resolveEffectiveThinking(enableThinking, clientReasoningEffort);
 
-  const rawEffort = (clientReasoningEffort === 'off' || clientReasoningEffort === 'on')
-    ? undefined
+   const normalizedClientEffort = typeof clientReasoningEffort === 'string'
+    ? clientReasoningEffort.trim().toLowerCase()
     : clientReasoningEffort;
+
+  const rawEffort = ['off', 'on', 'none'].includes(normalizedClientEffort)
+    ? undefined
+    : normalizedClientEffort;
+
   const effort = validReasoningEffort(model, rawEffort);
 
   switch (model) {
@@ -217,6 +230,46 @@ function getReasoningPayload(model, enableThinking, clientReasoningEffort, hasTo
     case 'nvidia/nemotron-3.5-lightning-30b-a3b': {
       if (!enableThinking) return { reasoning_budget: 0 };
       return { reasoning_budget: NEMOTRON_LIGHTNING_BUDGET_MAP[effort] ?? 16384 };
+    }
+
+        case 'deepseek-ai/deepseek-v4.1-flash': {
+      if (!enableThinking) {
+        return {
+          chat_template_kwargs: {
+            thinking: false
+          }
+        };
+      }
+
+      // Janitor levels mapped to DeepSeek V4.1's numeric 1-100 scale.
+      // These named-level mappings are proxy-side approximations.
+      const effortName = typeof effort === 'string'
+        ? effort.trim().toLowerCase().replace(/[_-]+/g, ' ')
+        : '';
+
+      const effortMap = {
+        minimal: 10,
+        low: 25,
+        medium: 40,
+        high: 50,
+        'extra high': 75,
+        xhigh: 75,
+        max: 100
+      };
+
+      const numericInput = Number(effort);
+
+      const numericEffort =
+        Number.isInteger(numericInput) && numericInput >= 1 && numericInput <= 100
+          ? numericInput
+          : (effortMap[effortName] ?? 50);
+
+      return {
+        chat_template_kwargs: {
+          thinking: true,
+          reasoning_effort: numericEffort
+        }
+      };
     }
 
     case 'deepseek-ai/deepseek-v4-flash-0731':
