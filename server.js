@@ -1,10 +1,10 @@
-// server.js — OpenAI-compatible proxy for NVIDIA NIM
-// Reasoning payload logic: reasoning.js. Tool-call leak recovery: tools.js.
+oning payload logic: reasoning.js. Tool-call leak recovery: tools.js.
 
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const https = require('https');
+const https = require('https');// server.js — OpenAI-compatible proxy for NVIDIA NIM
+// Reas
 const { StringDecoder } = require('string_decoder');
 const { timingSafeEqual } = require('crypto');
 const { SHOW_REASONING, getReasoningPayload, resolveEffectiveThinking, StreamNormalizer, normalizeNonStreamChoice } = require('./reasoning');
