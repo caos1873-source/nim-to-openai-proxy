@@ -472,7 +472,10 @@ const modelChain = [primaryModel];
     const baseRequest = {
       ...forwardedFields,
       temperature: temperature ?? 0.7,
-      max_tokens: Math.min(max_tokens ?? 2048, MAX_TOKENS_LIMIT),
+      max_tokens: Math.min(
+  max_tokens ?? (model === 'mistralai/mistral-large-4-1t-a52b' ? 8192 : 2048),
+  MAX_TOKENS_LIMIT
+),
       stream: stream || false
     };
 
