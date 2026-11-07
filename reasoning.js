@@ -152,7 +152,7 @@ function normalizeNonStreamChoice(choice, model) {
 
 // Valid reasoning_effort values per model, where NIM enforces an enum.
 // Values outside the set are dropped with a warning rather than forwarded.
-const REASONING_EFFORT_ENUMS = {
+const REASONING_EFFORT_ENUMS = { 'mistralai/mistral-large-4-1t-a52b': ['low', 'medium', 'high'],
   'openai/gpt-oss-120b': ['low', 'medium', 'high'],
   'openai/gpt-oss-20b': ['low', 'medium', 'high'],
   'deepseek-ai/deepseek-v4-flash-0731': ['low', 'high', 'max'],
@@ -218,6 +218,15 @@ function getReasoningPayload(model, enableThinking, clientReasoningEffort, hasTo
       if (effort === 'low') payload.chat_template_kwargs.low_effort = true;
       return payload;
     }
+      case 'mistralai/mistral-large-4-1t-a52b': {
+  const mistralEffort = ['low', 'medium', 'high'].includes(effort)
+    ? effort
+    : (enableThinking ? 'high' : 'low');
+
+  return {
+    reasoning_effort: mistralEffort
+  };
+}
 
     case 'nvidia/nemotron-3-ultra-550b-a55b': {
       if (!enableThinking) return {};
