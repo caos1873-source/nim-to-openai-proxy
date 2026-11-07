@@ -87,11 +87,12 @@ const MODEL_MAPPING = {
   'google-lightest': 'meta/muse-glimmer-30b', // was google/gemma-2b
   'google-lighter': 'poolside/laguna-xs-2.1', // was google/gemma-3-4b-it
     'm3': 'minimaxai/minimax-m3',
-  'deepseek-ai/deepseek-v4.1-flash': 'deepseek-ai/deepseek-v4.1-flash'
+  'deepseek-ai/deepseek-v4.1-flash': 'deepseek-ai/deepseek-v4.1-flash',
+'mistralai/mistral-large-4-1t-a52b': 'mistralai/mistral-large-4-1t-a52b'
 };
 
 // Used when an unrecognized alias is requested. Must point at a live model.
-const DEFAULT_MODEL = 'deepseek-ai/deepseek-v4.1-flash';
+const DEFAULT_MODEL = 'mistralai/mistral-large-4-1t-a52b';
 
 // Ordered by observed reliability/speed — an early failing model delays every fallback behind it.
 const FALLBACK_MODELS = [
