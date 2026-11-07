@@ -494,6 +494,21 @@ const nimFirstMessage = nimFirstChoice?.message || {};
 console.log(
   `[NIM] HTTP ${response.status} | choices=${response.data?.choices?.length ?? 'missing'} | content_chars=${String(nimFirstMessage.content ?? '').length} | reasoning_chars=${String(nimFirstMessage.reasoning ?? '').length} | reasoning_content_chars=${String(nimFirstMessage.reasoning_content ?? '').length} | finish_reason=${nimFirstChoice?.finish_reason ?? 'missing'}`
 );
+        // Mistral: detecta generaciones que agotan el presupuesto de tokens.
+    if (
+      usedModel === 'mistralai/mistral-large-4-1t-a52b' &&
+      nimFirstChoice?.finish_reason === 'length'
+    ) {
+      if (!nimFirstMessage.content) {
+        console.warn(
+          '[MISTRAL WARNING] Token limit reached without a final text response. Increase max_tokens or reduce reasoning effort.'
+        );
+      } else {
+        console.warn(
+          '[MISTRAL WARNING] Token limit reached. The final response may be incomplete.'
+        );
+      }
+    }
     console.log('[PROXY] Model used:', usedModel);
 
     const inlineReasoning = req.headers['x-reasoning-format'] === 'inline';
