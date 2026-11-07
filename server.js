@@ -292,6 +292,12 @@ async function callWithFallback(baseRequest, models, enableThinking, clientReaso
   console.log(
     `[REASONING] model=${model} thinking=${thinking} effort=${effort}`
   );
+} 
+    
+   if (model === 'mistralai/mistral-large-4-1t-a52b') {
+  console.log(
+    `[REASONING] model=${model} effort=${reasoningPayload.reasoning_effort ?? 'not-set'}`
+  );
 }
     const fullRequest = { ...baseRequest, model, ...reasoningPayload };
 
