@@ -1,4 +1,3 @@
-oning payload logic: reasoning.js. Tool-call leak recovery: tools.js.
 
 const express = require('express');
 const cors = require('cors');
