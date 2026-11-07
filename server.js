@@ -281,6 +281,17 @@ async function callWithFallback(baseRequest, models, enableThinking, clientReaso
 
   for (const model of attemptOrder) {
     const reasoningPayload = getReasoningPayload(model, enableThinking, clientReasoningEffort, hasTools);
+    
+    if (model === 'deepseek-ai/deepseek-v4.1-flash') {
+  const thinking = reasoningPayload.chat_template_kwargs?.thinking === true;
+  const effort = thinking
+    ? reasoningPayload.chat_template_kwargs?.reasoning_effort
+    : 'off';
+
+  console.log(
+    `[REASONING] model=${model} thinking=${thinking} effort=${effort}`
+  );
+}
     const fullRequest = { ...baseRequest, model, ...reasoningPayload };
 
     if (DEBUG_MODE) {
