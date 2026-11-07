@@ -455,6 +455,7 @@ app.post('/v1/chat/completions', async (req, res) => {
 
   try {
     const { model, max_tokens, temperature, stream, reasoning_effort } = req.body;
+    console.log(`[PROXY] Incoming request: model=${model} stream=${Boolean(stream)} max_tokens=${max_tokens ?? 'default'}`);
 
     let primaryModel = MODEL_MAPPING[model];
     if (!primaryModel) {
