@@ -486,6 +486,12 @@ const modelChain = [primaryModel];
     );
 
     upstreamStream = response.data;
+    const nimFirstChoice = response.data?.choices?.[0];
+const nimFirstMessage = nimFirstChoice?.message || {};
+
+console.log(
+  `[NIM] HTTP ${response.status} | choices=${response.data?.choices?.length ?? 'missing'} | content_chars=${String(nimFirstMessage.content ?? '').length} | reasoning_chars=${String(nimFirstMessage.reasoning ?? '').length} | reasoning_content_chars=${String(nimFirstMessage.reasoning_content ?? '').length} | finish_reason=${nimFirstChoice?.finish_reason ?? 'missing'}`
+);
     console.log('[PROXY] Model used:', usedModel);
 
     const inlineReasoning = req.headers['x-reasoning-format'] === 'inline';
