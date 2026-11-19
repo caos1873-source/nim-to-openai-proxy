@@ -153,7 +153,7 @@ function normalizeNonStreamChoice(choice, model) {
 // Valid reasoning_effort values per model, where NIM enforces an enum.
 // Values outside the set are dropped with a warning rather than forwarded.
 const REASONING_EFFORT_ENUMS = {
-  'mistralai/mistral-large-4-1t-a52b': ['low', 'medium', 'high'],
+  'mistralai/mistral-large-4-1t-a52b': ['low', 'medium', 'high'], 'moonshotai/kimi-k3.1-pro': ['low', 'medium', 'high', 'max'],
  'z-ai/glm-5.3-flash': ['minimal', 'low', 'medium', 'high', 'extra high', 'extra_high', 'extra-high', 'xhigh', 'max'],
   'openai/gpt-oss-120b': ['low', 'medium', 'high'],
   'openai/gpt-oss-20b': ['low', 'medium', 'high'],
@@ -327,6 +327,12 @@ function getReasoningPayload(model, enableThinking, clientReasoningEffort, hasTo
       return { chat_template_kwargs: { thinking_mode: thinkingMode } };
     }
 
+    case 'moonshotai/kimi-k3.1-pro': {
+  if (effort) return { reasoning_effort: effort };
+  if (enableThinking) return { reasoning_effort: 'max' };
+  return {}; // NVIDIA defaults to low
+}
+   
     case 'moonshotai/kimi-k3': {
       // No off-switch — omitting the field falls back to Kimi's own 'max'.
       if (effort) return { reasoning_effort: effort };
