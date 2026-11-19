@@ -479,6 +479,10 @@ const modelChain = [primaryModel];
       stream: stream || false
     };
 
+    // NVIDIA Kimi K3.1 Pro requires top_p = 0.95
+if (primaryModel === 'moonshotai/kimi-k3.1-pro') {
+  baseRequest.top_p = 0.95;
+}
     const { response, model: usedModel } = await callWithFallback(
       baseRequest,
       modelChain,
