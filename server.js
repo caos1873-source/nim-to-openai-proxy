@@ -484,7 +484,15 @@ const modelChain = [primaryModel];
 ),
       stream: stream || false
     };
-
+    
+// Kimi K3.1 Pro fixed parameters
+if (primaryModel === 'moonshotai/kimi-k3.1-pro') {
+  baseRequest.top_p = 0.95;
+  delete baseRequest.presence_penalty;
+  delete baseRequest.frequency_penalty;
+  delete baseRequest.n;
+}
+    
     const { response, model: usedModel } = await callWithFallback(
       baseRequest,
       modelChain,
