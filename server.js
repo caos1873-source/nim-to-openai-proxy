@@ -479,11 +479,6 @@ const modelChain = [primaryModel];
       stream: stream || false
     };
 
-   // NVIDIA Kimi K3.1 Pro fixed parameters
-if (primaryModel === 'moonshotai/kimi-k3.1-pro') {
-  baseRequest.top_p = 0.95;
-  baseRequest.presence_penalty = 0;
-}
     const { response, model: usedModel } = await callWithFallback(
       baseRequest,
       modelChain,
