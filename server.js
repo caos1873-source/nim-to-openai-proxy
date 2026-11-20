@@ -88,7 +88,9 @@ const MODEL_MAPPING = {
     'm3': 'minimaxai/minimax-m3',
   'deepseek-ai/deepseek-v4.1-flash': 'deepseek-ai/deepseek-v4.1-flash',
 'mistralai/mistral-large-4-1t-a52b': 'mistralai/mistral-large-4-1t-a52b',
- 'z-ai/glm-5.3-flash': 'z-ai/glm-5.3-flash', 'kimi-k3.1-pro': 'moonshotai/kimi-k3.1-pro',
+ 'z-ai/glm-5.3-flash': 'z-ai/glm-5.3-flash', 
+  'kimi-k3.1-pro': 'moonshotai/kimi-k3.1-pro', 
+  'moonshotai/kimi-k3.1-pro': 'moonshotai/kimi-k3.1-pro',
 };
 
 // Used when an unrecognized alias is requested. Must point at a live model.
